@@ -1,0 +1,13 @@
+@import url('https://fonts.googleapis.com/css2?family=Montserrat:ital,wght@0,100..900;1,100..900&display=swap');
+@import "tailwindcss";
+
+
+@custom-variant dark (&:where(.dark, .dark *));
+@theme {
+    --font-montserrat: 'Montserrat', sans-serif;
+    --color-primary: #4793FF;
+    --color-primary-light: rgba(71, 147, 255, 0.2);
+    --color-description: #939CB0;
+    --shadow-primary: 2px 5px 25px -3px rgba(180, 180, 180, 0.25);
+    
+}
