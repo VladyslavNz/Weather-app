@@ -1,7 +1,5 @@
 import axios from "axios";
 
-// Убираем прямой API_KEY и BASE_URL
-
 export const fetchWeatherData = async (location) => {
   try {
     const response = await axios.get("/api/openweather", {
