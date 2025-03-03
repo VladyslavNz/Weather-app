@@ -32,7 +32,7 @@ const ThisDay = ({ weatherData }) => {
       setCurrentTime(new Date().toLocaleTimeString());
     }, 1000);
 
-    return () => clearInterval(timer); // Очистка интервала при размонтировании компонента
+    return () => clearInterval(timer); 
   }, []);
 
   // Check if weather data is available
@@ -65,7 +65,7 @@ const ThisDay = ({ weatherData }) => {
 
   return (
     <div className="flex flex-col border-white rounded-2xl shadow-primary px-5 h-[300px]">
-      <div className="flex flex-col justify-between gap-6">
+      <div className="flex flex-col justify-between gap-6 max-[560px]:px-5">
         <div className="flex items-center justify-between gap-[67px] max-md:gap-10">
           <div className="flex flex-col">
             <h1 className="font-medium text-8xl max-xl:text-6xl max-xl:mt-10 text-primary">

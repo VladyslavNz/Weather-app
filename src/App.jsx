@@ -16,41 +16,42 @@ const App = () => {
   const [forecastData, setForecastData] = useState(null);
   const [selectedDate, setSelectedDate] = useState(null);
   const [city, setCity] = useState(null);
+  const [isCitySelected, setIsCitySelected] = useState(false);
+  const [isMobile, setIsMobile] = useState(window.innerWidth <= 768);
+
+  // Track changes in screen size
+  useEffect(() => {
+    const handleResize = () => {
+      setIsMobile(window.innerWidth <= 768);
+    };
+    window.addEventListener("resize", handleResize);
+    return () => window.removeEventListener("resize", handleResize);
+  }, []);
 
   useEffect(() => {
     if (weatherData) {
       setCity(weatherData.name);
+      setIsCitySelected(true); // The user has selected a city
 
-      // Fetch both forecast data and current weather when city changes
       Promise.all([
         fetchForecastData(weatherData.name),
         fetchWeatherData(weatherData.name),
       ]).then(([forecast, current]) => {
-        // Merge current weather into forecast if needed
         if (forecast && forecast.list && forecast.list.length > 0) {
-          // Add current date info to forecast for today's card
           const today = new Date().toISOString().split("T")[0];
-
-          // Check if today is already in the forecast
           const hasTodayForecast = forecast.list.some(
             (item) => item.dt_txt.split(" ")[0] === today
           );
-
-          // If today is not in forecast, add current weather as first item
           if (!hasTodayForecast) {
-            // Format current weather to match forecast format
-            const currentAsForecst = {
+            const currentAsForecast = {
               ...current,
               dt_txt: `${today} ${new Date().getHours()}:00:00`,
               main: current.main,
               weather: current.weather,
             };
-
-            // Add current weather to beginning of forecast list
-            forecast.list.unshift(currentAsForecst);
+            forecast.list.unshift(currentAsForecast);
           }
         }
-
         setForecastData(forecast);
       });
     }
@@ -58,21 +59,12 @@ const App = () => {
 
   useEffect(() => {
     if (selectedDate && city) {
-      // Get today's date string to compare
       const today = new Date().toISOString().split("T")[0];
-
-      // Check if the selected date is today
       if (selectedDate === today) {
-        // If today is selected, fetch fresh current weather data
         fetchWeatherData(city)
-          .then((data) => {
-            setWeatherData(data);
-          })
-          .catch((error) => {
-            console.error("Error fetching today's weather:", error);
-          });
+          .then((data) => setWeatherData(data))
+          .catch((error) => console.error("Error fetching today's weather:", error));
       } else {
-        // For other days, use forecast data as before
         fetchWeatherDataByDate(city, selectedDate).then((data) => {
           setWeatherData((prevData) => ({
             ...prevData,
@@ -93,11 +85,14 @@ const App = () => {
       navigator.geolocation.getCurrentPosition(
         (position) => {
           const { latitude, longitude } = position.coords;
-          fetchWeatherDataByCoords(latitude, longitude).then(setWeatherData);
+          fetchWeatherDataByCoords(latitude, longitude)
+            .then((data) => {
+              setWeatherData(data);
+              setIsCitySelected(true); // Geolocation has worked, show sections
+            })
+            .catch(() => setIsCitySelected(false)); // If error - hide sections
         },
-        (error) => {
-          console.error("Error getting geolocation:", error);
-        }
+        () => setIsCitySelected(false) // If the user has forbidden geolocation - hide it
       );
     }
   }, []);
@@ -108,16 +103,8 @@ const App = () => {
         <header className="header pt-5">
           <div className="flex items-center justify-between gap-5 max-[450px]:flex-col max-[450px]:items-center">
             <div className="flex items-center gap-5">
-              <img
-                src={headerLogo}
-                alt="React Weather"
-                width={65}
-                height={65}
-              />
-              <a
-                href="/"
-                className="font-bold text-primary text-2xl uppercase max-sm:text-xl"
-              >
+              <img src={headerLogo} alt="React Weather" width={65} height={65} />
+              <a href="/" className="font-bold text-primary text-2xl uppercase max-sm:text-xl">
                 React Weather
               </a>
             </div>
@@ -126,21 +113,30 @@ const App = () => {
                 setWeatherData={(data) => {
                   setWeatherData(data);
                   setCity(data.name);
+                  setIsCitySelected(true); 
                 }}
               />
             </nav>
           </div>
         </header>
         <main className="mt-8">
-          <div className="flex items-center justify-between gap-12 pb-12.5 max-sm:gap-5 max-[560px]:flex-col max-[560px]:items-center">
+            {isMobile && !isCitySelected && (
+            <p className="text-center font-bold text-xl pt-5 max-[450px]:text-lg">Enter the name of the city to see the weather.</p>
+            )}
+          <div
+            className={`flex items-center justify-between gap-12 pb-12.5 max-sm:gap-5 max-[560px]:flex-col max-[560px]:items-center ${
+              isMobile && !isCitySelected ? "hidden" : ""
+            }`}
+          >
             <ThisDay weatherData={weatherData} />
             <ThisDayInfo weatherData={weatherData} />
           </div>
-          <div className="flex flex-col text-center pb-10 2xl:justify-center 2xl:items-center">
-            <WeatherCards
-              forecastData={forecastData}
-              onSelectDate={setSelectedDate}
-            />
+          <div
+            className={`flex flex-col text-center pb-10 2xl:justify-center 2xl:items-center ${
+              isMobile && !isCitySelected ? "hidden" : ""
+            }`}
+          >
+            <WeatherCards forecastData={forecastData} onSelectDate={setSelectedDate} />
           </div>
         </main>
       </div>

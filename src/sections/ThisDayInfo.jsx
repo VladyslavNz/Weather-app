@@ -14,7 +14,7 @@ const ThisDayInfo = ({ weatherData }) => {
 
   return (
     <div className="shadow-primary rounded-2xl flex w-[750px] h-[300px] relative items-center z-1  max-[560px]:w-[100%] max-[560px]:h-[auto] max-[560px]:flex-col max-[560px]:gap-5 max-[560px]:px-5">
-      <div className="flex flex-col gap-5 text-sm max-md:gap-10 max-md:text-[16px] ml-8 max-md:ml-5">
+      <div className="flex flex-col gap-5 text-sm max-md:gap-10 max-md:text-[16px] ml-8 max-md:ml-5 max-[560px]:py-5">
         {/* Temperature section */}
         <div className="flex items-center gap-5">
           <div className="w-9 h-9 rounded-full shadow-primary flex items-center justify-center max-md:hidden">
