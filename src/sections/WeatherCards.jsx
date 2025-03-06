@@ -24,12 +24,12 @@ const weatherIcons = {
 
 const WeatherCards = ({ forecastData, onSelectDate }) => {
   const [selectedIndex, setSelectedIndex] = useState(null);
-  const [isMobile, setIsMobile] = useState(window.innerWidth <= 768);
+  const [isMobile, setIsMobile] = useState(window.innerWidth <= 1024);
 
   // Update isMobile state when window is resized
   useEffect(() => {
     const handleResize = () => {
-      setIsMobile(window.innerWidth <= 768);
+      setIsMobile(window.innerWidth <= 1024);
     };
 
     window.addEventListener("resize", handleResize);
@@ -167,7 +167,7 @@ const WeatherCards = ({ forecastData, onSelectDate }) => {
 
   // For the desktop, we use a grid
   return (
-    <div className="flex flex-row max-lg:grid max-lg:grid-cols-3 max-lg:gap-10 max-lg:mx-auto gap-5 p-5 shadow-primary overflow-x-auto">
+    <div className="flex flex-row max-lg:grid max-lg:grid-cols-3 max-lg:gap-10 max-lg:mx-auto gap-5 p-5 shadow-primary overflow-x-auto rounded-xl">
       {dailyForecast.map((item, index) => getWeatherCard(item, index))}
     </div>
   );

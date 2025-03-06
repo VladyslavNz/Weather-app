@@ -11,7 +11,7 @@ const Search = ({ setWeatherData }) => {
         setWeatherData(data);
         console.log(data);
       } catch (error) {
-        console.error("Ошибка", error);
+        console.error("Error", error);
       } finally {
         setLocation("");
       }
