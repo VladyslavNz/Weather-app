@@ -167,7 +167,7 @@ const WeatherCards = ({ forecastData, onSelectDate }) => {
 
   // For the desktop, we use a grid
   return (
-    <div className="flex flex-row max-lg:grid max-lg:grid-cols-3 max-lg:gap-10 max-lg:mx-auto gap-5 p-5 shadow-primary overflow-x-auto">
+    <div className="flex flex-row max-xl:grid max-xl:grid-cols-3 max-xl:gap-10 max-xl:mx-auto gap-5 p-5 shadow-primary overflow-x-auto">
       {dailyForecast.map((item, index) => getWeatherCard(item, index))}
     </div>
   );

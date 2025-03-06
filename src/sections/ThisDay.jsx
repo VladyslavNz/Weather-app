@@ -32,7 +32,7 @@ const ThisDay = ({ weatherData }) => {
       setCurrentTime(new Date().toLocaleTimeString());
     }, 1000);
 
-    return () => clearInterval(timer); 
+    return () => clearInterval(timer);
   }, []);
 
   // Check if weather data is available
