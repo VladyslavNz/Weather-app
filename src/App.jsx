@@ -17,12 +17,12 @@ const App = () => {
   const [selectedDate, setSelectedDate] = useState(null);
   const [city, setCity] = useState(null);
   const [isCitySelected, setIsCitySelected] = useState(false);
-  const [isMobile, setIsMobile] = useState(window.innerWidth <= 768);
+  const [isMobile, setIsMobile] = useState(window.innerWidth <= 1024);
 
   // Track changes in screen size
   useEffect(() => {
     const handleResize = () => {
-      setIsMobile(window.innerWidth <= 768);
+      setIsMobile(window.innerWidth <= 1024);
     };
     window.addEventListener("resize", handleResize);
     return () => window.removeEventListener("resize", handleResize);
@@ -63,7 +63,9 @@ const App = () => {
       if (selectedDate === today) {
         fetchWeatherData(city)
           .then((data) => setWeatherData(data))
-          .catch((error) => console.error("Error fetching today's weather:", error));
+          .catch((error) =>
+            console.error("Error fetching today's weather:", error)
+          );
       } else {
         fetchWeatherDataByDate(city, selectedDate).then((data) => {
           setWeatherData((prevData) => ({
@@ -103,8 +105,16 @@ const App = () => {
         <header className="header pt-5">
           <div className="flex items-center justify-between gap-5 max-[450px]:flex-col max-[450px]:items-center">
             <div className="flex items-center gap-5">
-              <img src={headerLogo} alt="React Weather" width={65} height={65} />
-              <a href="/" className="font-bold text-primary text-2xl uppercase max-sm:text-xl">
+              <img
+                src={headerLogo}
+                alt="React Weather"
+                width={65}
+                height={65}
+              />
+              <a
+                href="/"
+                className="font-bold text-primary text-2xl uppercase max-sm:text-xl"
+              >
                 React Weather
               </a>
             </div>
@@ -113,19 +123,21 @@ const App = () => {
                 setWeatherData={(data) => {
                   setWeatherData(data);
                   setCity(data.name);
-                  setIsCitySelected(true); 
+                  setIsCitySelected(true);
                 }}
               />
             </nav>
           </div>
         </header>
         <main className="mt-8">
-            {isMobile && !isCitySelected && (
-            <p className="text-center font-bold text-xl pt-5 max-[450px]:text-lg">Enter the name of the city to see the weather.</p>
-            )}
+          {!isCitySelected && (
+            <p className="text-center font-bold text-xl pt-5 max-[450px]:text-lg">
+              Enter the name of the city to see the weather.
+            </p>
+          )}
           <div
             className={`flex items-center justify-between gap-12 pb-12.5 max-sm:gap-5 max-[560px]:flex-col max-[560px]:items-center ${
-              isMobile && !isCitySelected ? "hidden" : ""
+              !isCitySelected || (isMobile && !isCitySelected) ? "hidden" : ""
             }`}
           >
             <ThisDay weatherData={weatherData} />
@@ -133,10 +145,13 @@ const App = () => {
           </div>
           <div
             className={`flex flex-col text-center pb-10 2xl:justify-center 2xl:items-center ${
-              isMobile && !isCitySelected ? "hidden" : ""
+              !isCitySelected || (isMobile && !isCitySelected) ? "hidden" : ""
             }`}
           >
-            <WeatherCards forecastData={forecastData} onSelectDate={setSelectedDate} />
+            <WeatherCards
+              forecastData={forecastData}
+              onSelectDate={setSelectedDate}
+            />
           </div>
         </main>
       </div>
