@@ -3,6 +3,7 @@ import temp from "../assets/icons/temp.svg";
 import pressure from "../assets/icons/pressure.svg";
 import precipitation from "../assets/icons/precipitation.svg";
 import wind from "../assets/icons/wind.svg";
+import { UNITS } from "../constants/units";
 
 const ThisDayInfo = ({ weatherData }) => {
   // Extract precipitation data from weather data
@@ -28,9 +29,11 @@ const ThisDayInfo = ({ weatherData }) => {
           <span className="text-description pr-1 max-md:pr-0">Temperature</span>
           <p>
             {weatherData
-              ? `${Math.round(
-                  weatherData.main.temp
-                )}°C - feels like ${Math.round(weatherData.main.feels_like)}°C`
+              ? `${Math.round(weatherData.main.temp)}${
+                  UNITS.TEMP_UNIT
+                } - feels like ${Math.round(weatherData.main.feels_like)}${
+                  UNITS.TEMP_UNIT
+                }`
               : "--"}
           </p>
         </div>
@@ -46,10 +49,14 @@ const ThisDayInfo = ({ weatherData }) => {
             />
           </div>
           <span className="text-description pr-8">Pressure</span>
-          <p>{weatherData ? `${weatherData.main.pressure} hPa` : "--"}</p>
+          <p>
+            {weatherData
+              ? `${weatherData.main.pressure} ${UNITS.PRESSURE_UNIT}`
+              : "--"}
+          </p>
         </div>
 
-        {/* Precipitation section - updated to only show when precipitation is forecasted */}
+        {/* Precipitation section */}
         <div className="flex items-center gap-5">
           <div className="w-9 h-9 rounded-full shadow-primary flex items-center justify-center max-md:hidden">
             <img
@@ -66,7 +73,7 @@ const ThisDayInfo = ({ weatherData }) => {
             {!weatherData
               ? "--"
               : hasPrecipitation
-              ? `${precipitationData} mm`
+              ? `${precipitationData} ${UNITS.PRECIPITATION_UNIT}`
               : "No precipitation"}
           </p>
         </div>
@@ -84,7 +91,9 @@ const ThisDayInfo = ({ weatherData }) => {
           <span className="text-description pr-14">Wind</span>
           <p>
             {weatherData
-              ? `${Math.round(weatherData.wind.speed * 3.6)} km/h`
+              ? `${Math.round(
+                  weatherData.wind.speed * UNITS.WIND_MS_TO_KMH
+                )} km/h`
               : "--"}
           </p>
         </div>
