@@ -1,9 +1,14 @@
 import axios from "axios";
+import {
+  API_ENDPOINTS,
+  WEATHER_TYPES,
+  DEFAULT_FORECAST_COUNT,
+} from "../constants/apiConfig";
 
 export const fetchWeatherData = async (location) => {
   try {
-    const response = await axios.get("/api/openweather", {
-      params: { type: "weather", q: location },
+    const response = await axios.get(API_ENDPOINTS.OPENWEATHER, {
+      params: { type: WEATHER_TYPES.CURRENT, q: location },
     });
     return response.data;
   } catch (error) {
@@ -14,10 +19,13 @@ export const fetchWeatherData = async (location) => {
 
 export const fetchForecastData = async (location) => {
   try {
-    const response = await axios.get("/api/openweather", {
-      params: { type: "forecast", q: location, cnt: 40 },
+    const response = await axios.get(API_ENDPOINTS.OPENWEATHER, {
+      params: {
+        type: WEATHER_TYPES.FORECAST,
+        q: location,
+        cnt: DEFAULT_FORECAST_COUNT,
+      },
     });
-    // ...existing processing if needed...
     return response.data;
   } catch (error) {
     console.error("Error fetching forecast data:", error);
@@ -27,8 +35,8 @@ export const fetchForecastData = async (location) => {
 
 export const fetchWeatherDataByCoords = async (lat, lon) => {
   try {
-    const response = await axios.get("/api/openweather", {
-      params: { type: "weather", lat, lon },
+    const response = await axios.get(API_ENDPOINTS.OPENWEATHER, {
+      params: { type: WEATHER_TYPES.CURRENT, lat, lon },
     });
     return response.data;
   } catch (error) {
@@ -39,8 +47,8 @@ export const fetchWeatherDataByCoords = async (lat, lon) => {
 
 export const fetchForecastDataByCoords = async (lat, lon) => {
   try {
-    const response = await axios.get("/api/openweather", {
-      params: { type: "forecast", lat, lon },
+    const response = await axios.get(API_ENDPOINTS.OPENWEATHER, {
+      params: { type: WEATHER_TYPES.FORECAST, lat, lon },
     });
     return response.data;
   } catch (error) {
@@ -55,8 +63,8 @@ export const fetchWeatherDataByDate = async (location, date) => {
     if (date === today) {
       return fetchWeatherData(location);
     }
-    const response = await axios.get("/api/openweather", {
-      params: { type: "forecast", q: location },
+    const response = await axios.get(API_ENDPOINTS.OPENWEATHER, {
+      params: { type: WEATHER_TYPES.FORECAST, q: location },
     });
     const forecastList = response.data.list;
     const weatherData = forecastList.find(
